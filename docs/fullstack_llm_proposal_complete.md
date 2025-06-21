@@ -49,7 +49,7 @@ flowchart TD
         Q2["Event Queue: Preprocessed Content"]
         P1["Preprocessor Service (cleaning, chunking, OCR)"]
         Q3["Event Queue: LLM Results"]
-        L1["LLM Pipeline Service (RAG, summary, classification)"]
+        L1["LLM Pipeline Service (summary, classification, RAG)"]
   end
  subgraph Storage["Storage"]
         S1["Metadata Store (Postgres)"]
@@ -108,16 +108,28 @@ flowchart TD
 - Split content into chunks
 - Normalize formats
 - OCR for images/PDFs
+- Chuncking for embeddings
 - Emit processed chunks to next queue
 
-### 4. **LLM Pipeline**
+### 4. **LLM Pipeline (with RAG)**
 
 **Role**: Apply language model workflows.
 
-- Summarize content using OpenAI/Claude
-- Classify content by topic/source/urgency
-- Generate vector embeddings using OpenAI or Sentence Transformers
+- **Summerisation**: Content-level sumaries
+- **Classification**: By topic/source/urgency
+- **Semantic Indexing***: Generate vector embeddings using OpenAI or Sentence Transformers
+- **RAG**:
+  - Embed user query → search vector DB → inject results into prompt → generate final output
 - Emit results to storage queues
+
+```mermaid
+graph TD
+  A[User Query] --> B[Embed Query]
+  B --> C[Vector DB Search]
+  C --> D[Top-k Documents]
+  D --> E[Inject into Prompt Template]
+  E --> F[LLM Generates Final Output]
+```
 
 ### 5. **Storage Layer**
 
@@ -128,10 +140,14 @@ flowchart TD
 
 ### 6. **API Layer**
 
-**Role**: Provide public access to search, retrieve, or manage processed content.
+**Role**: Provide access to search, retrieve, or manage processed content.
 
 - Built with FastAPI
-- `/search`, `/document/{id}`, `/status`, `/connect`, etc.
+  - `/search`
+  - `/document/{id}`
+  - `/status`
+  - `/connect`
+  - etc.
 
 ### 7. **Admin Dashboard**
 
@@ -139,10 +155,10 @@ flowchart TD
 
 - React + TailwindCSS
 - Pages:
-  - Ingestion connections
-  - Content search & preview
-  - Processing logs
-  - Retry/monitor LLM jobs
+  - Connect integrations
+  - Search/view documents
+  - Monitor pipeline jobs
+  - Retry failed processes
 
 ---
 
