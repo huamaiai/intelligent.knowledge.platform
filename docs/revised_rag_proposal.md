@@ -43,25 +43,25 @@ graph TD
     A5[Manual Upload] --> I1
   end
 
-  subgraph Message Bus (Kafka/Redis/RabbitMQ)
+  subgraph "Message Bus (Kafka/Redis/RabbitMQ)"
     I1 --> Q1[Event Queue: Ingestion Events]
     P1 --> Q2[Event Queue: Preprocessed Content]
     L1 --> Q3[Event Queue: LLM Results]
   end
 
   subgraph Preprocessing
-    Q1 --> P1[Preprocessor Service\n(cleaning, chunking, OCR)]
+    Q1 --> P1["Preprocessor Service (cleaning, chunking, OCR)"]
     P1 --> Q2
   end
 
   subgraph LLM Orchestration
-    Q2 --> L1[LLM Pipeline Service\n(Summarize, Classify, RAG)]
+    Q2 --> L1["LLM Pipeline Service (Summarize, Classify, RAG)"]
     L1 --> Q3
   end
 
   subgraph Storage
-    Q3 --> S1[Metadata Store (Postgres)]
-    Q3 --> S2[Vector DB (Qdrant/Pinecone)]
+    Q3 --> S1["Metadata Store (Postgres)"]
+    Q3 --> S2["Vector DB (Qdrant/Pinecone)"]
   end
 
   subgraph API
@@ -79,22 +79,28 @@ graph TD
 ## 🛠 Subsystem Breakdown
 
 ### 1. **Ingestion Layer**
+
 Connects to external tools via API/webhook (Slack, Notion, Gmail, LMS). Normalizes and publishes ingestion events.
 
 ### 2. **Message Queue/Event Bus**
+
 Connects all services in a decoupled fashion using Kafka or Redis Streams. Ensures fault tolerance and retry support.
 
 ### 3. **Preprocessing Service**
+
 Normalizes content:
+
 - Text cleaning, OCR (Tesseract/Vision API)
 - Chunking for embedding
 - Language detection
 
 ### 4. **LLM Pipeline (with RAG)**
+
 Orchestrates LLM tasks:
+
 - **Summarization**: Document-level summaries
 - **Classification**: Topic/urgency
-- **RAG**: 
+- **RAG**:
   - Embed user query → search vector DB → inject results into prompt → generate final output
 
 ```mermaid
@@ -107,18 +113,23 @@ graph TD
 ```
 
 ### 5. **Storage Layer**
+
 - **Postgres** stores metadata (summary, source, classification)
 - **Vector DB (Qdrant)** stores semantic embeddings for search
 
 ### 6. **API Layer**
+
 Built with FastAPI:
+
 - `/search` (RAG)
 - `/document/{id}`
 - `/status`
 - `/connect`
 
 ### 7. **Admin Dashboard**
+
 Built with React + Tailwind:
+
 - Connect integrations
 - View/search documents
 - Monitor pipeline jobs
