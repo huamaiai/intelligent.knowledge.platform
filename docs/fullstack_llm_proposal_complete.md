@@ -183,6 +183,21 @@ graph TD
 
 ---
 
+## 📆 Proposed Build Timeline (6 Weeks MVP)
+
+| Phase | Focus | Duration |
+|-------|-------|----------|
+| **Week 1** | Ingestion system, messaging setup, DB schema | 4–5 days |
+| **Week 2** | Preprocessing logic (OCR, chunking), messaging flow | 4–5 days |
+| **Week 3** | LLM pipelines (summarize, classify, RAG), vector DB | 4–5 days |
+| **Week 4** | FastAPI backend APIs, search endpoints, auth integration | 4–5 days |
+| **Week 5** | React + Tailwind admin dashboard, integrations UI | 4–5 days |
+| **Week 6** | Testing, logging, cloud deployment (Railway/AWS) | 3–5 days |
+
+Each component is modular and testable, allowing for weekly demos and feedback cycles.
+
+---
+
 ## 📋 Clarification Questions
 
 1. **Who will use the Admin Dashboard?**  
